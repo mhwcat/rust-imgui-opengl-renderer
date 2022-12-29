@@ -137,7 +137,7 @@ impl Renderer {
 
   pub fn render<'ui>(
     &self,
-    ui: Ui<'ui>,
+    imgui: &mut Context
   ) {
     use imgui::{DrawVert,DrawIdx,DrawCmd,DrawCmdParams};
 
@@ -176,8 +176,8 @@ impl Renderer {
       gl.PolygonMode(gl::FRONT_AND_BACK, gl::FILL);
 
 
-      let [width, height] = ui.io().display_size;
-      let [scale_w, scale_h] = ui.io().display_framebuffer_scale;
+      let [width, height] = imgui.io().display_size;
+      let [scale_w, scale_h] = imgui.io().display_framebuffer_scale;
 
       let fb_width = width * scale_w;
       let fb_height = height * scale_h;
@@ -205,8 +205,7 @@ impl Renderer {
       gl.VertexAttribPointer(self.locs.uv,       2, gl::FLOAT,         gl::FALSE, mem::size_of::<DrawVert>() as _, field_offset::<DrawVert, _, _>(|v| &v.uv) as _);
       gl.VertexAttribPointer(self.locs.color,    4, gl::UNSIGNED_BYTE, gl::TRUE,  mem::size_of::<DrawVert>() as _, field_offset::<DrawVert, _, _>(|v| &v.col) as _);
 
-
-      let draw_data = ui.render();
+      let draw_data = imgui.render();
 
       for draw_list in draw_data.draw_lists() {
         let vtx_buffer = draw_list.vtx_buffer();
